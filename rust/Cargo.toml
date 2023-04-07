@@ -1,0 +1,13 @@
+[package]
+name = "stern-gerlach"
+version = "0.1.0"
+edition = "2021"
+authors = ["James Wright <hello@jameswright.me>"]
+description = "The rust-wasm code behind an interactive simulator for something like the Stern-Gerlach expriment."
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+curl = { version="0.4.13", features = ['static-curl'] }
