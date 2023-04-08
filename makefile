@@ -1,11 +1,11 @@
 .DEFAULT_GOAL := build
 
-rust/pkg: rust/src/*
+rust/pkg: $(shell find rust/src)
 	@echo "Building web assembly package."
 	rm -rf rust/pkg
 	cd rust && wasm-pack build --no-typescript --target web
 
-build: rust/pkg website/*
+build: rust/pkg $(shell find website)
 	@echo "Building."
 	rm -rf build
 	mkdir build

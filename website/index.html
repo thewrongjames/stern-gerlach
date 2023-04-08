@@ -4,13 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stern Gerlach</title>
-</head>
-<body>
+  <link rel="stylesheet" type="text/css" href="/static/css/styles.css" />
   <script type="module">
     import init, { greet } from "/static/wasm/stern_gerlach.js";
     init().then(() => {
       greet("WebAssembly");
     });
   </script>
+</head>
+<body>
+  <div id="page">
+    <header>
+      <h1>
+        Stern Gerlach Simulator
+      </h1>
+    </header>
+    <canvas></canvas>
+    <footer>
+      <p>Made, with ❤️, by <a href="https://jameswright.me">James Wright</a>.</p>
+    </footer>
+  </div>
 </body>
 </html>
