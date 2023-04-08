@@ -2,6 +2,10 @@
 
 (Hopefully eventually) an interactive simulator for something like the Stern-Gerlach experiment.
 
+## Development
+
+This requires `wasm-pack`. I needed to install `wasm-pack` with `cargo install wasm-pack --no-default-features` to avoid segfaults. See https://github.com/rustwasm/wasm-pack/issues/1203#issuecomment-1374704720.
+
 ## Notes
 
 - I think I want to work in Rust compiling to Web Assembly directly with no framework.
