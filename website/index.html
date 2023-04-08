@@ -6,8 +6,11 @@
   <title>Stern Gerlach</title>
 </head>
 <body>
-  <script defer>
-    console.log('here')
+  <script type="module">
+    import init, { greet } from "/static/wasm/stern_gerlach.js";
+    init().then(() => {
+      greet("WebAssembly");
+    });
   </script>
 </body>
 </html>
