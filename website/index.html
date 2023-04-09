@@ -6,10 +6,8 @@
   <title>Stern Gerlach</title>
   <link rel="stylesheet" type="text/css" href="/static/css/styles.css" />
   <script type="module">
-    import init, { greet } from "/static/wasm/stern_gerlach.js";
-    init().then(() => {
-      greet("WebAssembly");
-    });
+    import init from '/static/wasm/stern_gerlach.js'
+    init()
   </script>
 </head>
 <body>
@@ -19,7 +17,7 @@
         Stern Gerlach Simulator
       </h1>
     </header>
-    <canvas></canvas>
+    <canvas id="canvas"></canvas>
     <footer>
       <p>Made, with ❤️, by <a href="https://jameswright.me">James Wright</a>.</p>
     </footer>

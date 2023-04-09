@@ -17,6 +17,8 @@
 - `make serve` will run a development server.
 - `make watch` will re-run `make build` whenever the contents of `website` or `rust/src` change.
 - Running `make serve` and `make watch` at the same time allows for simply saving the code, and refreshing the browser to see updates.
+- `make update` will update dependencies.
+- You will still need to either disable caching or hard-reload to have the browser update the static files.
 
 ## Notes
 

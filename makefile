@@ -14,7 +14,7 @@ build: rust/pkg $(shell find website)
 	cp rust/pkg/stern_gerlach.js build/static/wasm
 	cp rust/pkg/stern_gerlach_bg.wasm build/static/wasm
 
-.PHONY: serve, clean, watch
+.PHONY: serve, clean, watch, update
 
 serve: build
 	cd build && python3 -m http.server
@@ -27,3 +27,6 @@ watch:
 	while inotifywait -e modify -e create `find website` `find rust/src`; do \
 		make build; \
 	done;
+
+update:
+	cd rust && cargo update
