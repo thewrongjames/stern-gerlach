@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "paths": {
+      "/static/js/*": ["./public/static/js/*"]
+    },
+    "allowJs": true,
+    "checkJs": true
+  },
+  "include": [
+    "public/static/js/**/*.js"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "stern-gerlach",
+  "description": "(Hopefully, eventually) an interactive simulator for something like the Stern-Gerlach experiment.",
+  "scripts": {
+    "start": "http-server ./public",
+    "lint": "eslint '**/*.js'",
+    "lint:fix": "eslint --fix '**/*.js'",
+    "types": "tsc --project jsconfig.json"
+  },
+  "author": "James Wright <hello@jameswright.me>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thewrongjames/stern-gerlach"
+  },
+  "devDependencies": {
+    "eslint": "^8.51.0",
+    "http-server": "^14.1.1",
+    "typescript": "^5.2.2"
+  }
+}

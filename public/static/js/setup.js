@@ -1,3 +1,3 @@
-import { setupWindowResizeListener } from '/static/js/maintain_canvas_size.js'
+import setupWindowResizeListener from '/static/js/setup-window-resize-listener.js'
 
 setupWindowResizeListener()
