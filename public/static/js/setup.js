@@ -1,5 +1,7 @@
 import { CANVAS_ELEMENT_ID } from '/static/js/config.js'
 import makeDraw from '/static/js/draw.js'
+import SmileyFace from '/static/js/models/smiley-facy.js'
+import drawables from '/static/js/drawables.js'
 
 /**
  * Make a function designed to be attached to the window as a resize event
@@ -38,6 +40,10 @@ function setup() {
   windowResizeListener()
   window.addEventListener('resize', windowResizeListener)
 
+  const smileyFace = new SmileyFace()
+  drawables.push(smileyFace)
+
+  // Start the drawing loop.
   makeDraw(canvasContext)()
 }
 

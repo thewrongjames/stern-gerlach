@@ -4,12 +4,15 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "paths": {
-      "/static/js/*": ["./public/static/js/*"]
+      "/static/js/*": ["./public/static/js/*"],
+      "@/types/*": ["./types/*"]
     },
     "allowJs": true,
-    "checkJs": true
+    "checkJs": true,
+    "noEmit": true
   },
   "include": [
-    "public/static/js/**/*.js"
+    "public/static/js/**/*.js",
+    "types/**/*.ts"
   ]
 }

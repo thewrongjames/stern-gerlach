@@ -1,3 +1,5 @@
+import drawables from '/static/js/drawables.js'
+
 /**
  * Make the function that draws the canvas application onto the given canvas
  * rendering context. The draw function will set itself up to repeat using
@@ -8,15 +10,14 @@
  */
 export default function makeDraw(canvasContext) {
   function draw() {
-    canvasContext.beginPath()
-    canvasContext.arc(75, 75, 50, 0, Math.PI * 2, true) // Outer circle
-    canvasContext.moveTo(110, 75)
-    canvasContext.arc(75, 75, 35, 0, Math.PI, false) // Mouth (clockwise)
-    canvasContext.moveTo(65, 65)
-    canvasContext.arc(60, 65, 5, 0, Math.PI * 2, true) // Left eye
-    canvasContext.moveTo(95, 65)
-    canvasContext.arc(90, 65, 5, 0, Math.PI * 2, true) // Right eye
-    canvasContext.stroke()
+    canvasContext.clearRect(
+      0,
+      0,
+      canvasContext.canvas.width,
+      canvasContext.canvas.height
+    )
+
+    drawables.forEach(drawable => drawable.draw(canvasContext))
 
     window.requestAnimationFrame(draw)
   }

@@ -4,6 +4,8 @@
 
 ## Development
 
+This is a purely JavaScript project that uses TypeScript only for type-checking, with no compilation. There is typescript code in the `types` directory, but that is only so it can be imported in JSDocs types for type assertions.
+
 The project currently has no runtime dependencies, but it does have several development dependencies, which can be installed with `npm install`.
 
 - `npm start` will run a development server.
