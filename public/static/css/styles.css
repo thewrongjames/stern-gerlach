@@ -1,7 +1,4 @@
 :root {
-  --header-height: 5.5rem;
-  --footer-height: 2.5rem;
-
   --grey-1: #F8F9FA;
   --grey-2: #E9ECEF;
   --grey-3: #DEE2E6;
@@ -13,14 +10,20 @@
   --grey-9: #212529;
 
   --background-colour: var(--grey-1);
-  --header-background-colour: var(--grey-8);
-  --footer-background-colour: var(--grey-8);
+  --background-colour-header: var(--grey-8);
+  --background-colour-footer: var(--grey-8);
+  --background-colour-controls: var(--grey-6);
 
   --text-colour: var(--grey-9);
   --header-text-colour: var(--grey-1);
   --footer-text-colour: var(--grey-4);
 
   --bright-link-color: #72bce0;
+
+  --controls-button-background-color: var(--grey-2);
+  --controls-button-background-color-selected: var(--grey-1);
+
+  --border-radius: 5px;
 }
 
 * {
@@ -30,20 +33,20 @@
 
 body {
   margin: 0;
+  min-width: 300px;
   color: var(--text-colour);
   background-color: var(--background-colour);
-  min-width: 300px;
 }
 
 #page{
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 header {
-  height: var(--header-height);
-  background-color: var(--header-background-colour);
+  min-height: 5rem;
+  background-color: var(--background-colour-header);
   color: var(--header-text-colour);
   text-align: center;
   display: flex;
@@ -56,13 +59,12 @@ header h1 {
 }
 
 footer {
-  height: var(--footer-height);
-  background-color: var(--footer-background-colour);
+  min-height: 3rem;
+  background-color: var(--background-colour-footer);
   color: var(--footer-text-colour);
-  text-align: center;
   margin-top: auto;
   display: flex;
-  flex-direction: column;
+  text-align: center;
   justify-content: space-around;
 }
 
@@ -70,6 +72,41 @@ footer a {
   color: var(--bright-link-color);
 }
 
+#content {
+  position: relative;
+  flex-grow: 1;
+  /*
+  If I don't have overflow hidden this this will grow to fix the canvas. This
+  can cause a kind of feedback loop with the canvas resizing, where its pixel
+  size will be set to match its css size which will then grow to contain its
+  pixel size etc. etc. This stops the css size from growing.
+  */
+  overflow: hidden;
+}
+
 canvas {
-  height: calc(100vh - var(--header-height) - var(--footer-height));
+  height: 100%;
+  width: 100%;
+}
+
+#controls {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  background-color: var(--background-colour-controls);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+}
+
+#controls button {
+  background-color: var(--controls-button-background-color);
+  border: none;
+  padding: 0.5rem;
+  min-width: 5rem;
+  border-radius: var(--border-radius);
+}
+
+#controls button:hover {
+  cursor: pointer;
+  background-color: var(--controls-button-background-color-selected);
 }

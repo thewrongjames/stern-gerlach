@@ -1,4 +1,4 @@
-import { CANVAS_ELEMENT_ID } from '/static/js/config.js'
+import { CANVAS_ELEMENT_ID, NEW_BUTTON_ID } from '/static/js/config.js'
 import makeDraw from '/static/js/draw.js'
 import SmileyFace from '/static/js/models/smiley-facy.js'
 import drawables from '/static/js/drawables.js'
@@ -12,9 +12,30 @@ import drawables from '/static/js/drawables.js'
  */
 function makeWindowResizeListener(canvas) {
   return () => {
+    console.log({
+      width: canvas.width,
+      height: canvas.height,
+      clientWidth: canvas.clientWidth,
+      clientHeight: canvas.clientHeight,
+    })
+
     canvas.width = canvas.clientWidth
     canvas.height = canvas.clientHeight
   }
+}
+
+function setupNewButton() {
+  const newButton = document.getElementById(NEW_BUTTON_ID)
+  if (newButton === null) {
+    throw new Error(
+      `Expected the element with ID ${NEW_BUTTON_ID} to exist, but it does not.`
+    )
+  }
+
+  newButton.addEventListener('click', () => {
+    const smileyFace = new SmileyFace()
+    drawables.push(smileyFace)
+  })
 }
 
 function setup() {
@@ -42,6 +63,8 @@ function setup() {
 
   const smileyFace = new SmileyFace()
   drawables.push(smileyFace)
+
+  setupNewButton()
 
   // Start the drawing loop.
   makeDraw(canvasContext)()
