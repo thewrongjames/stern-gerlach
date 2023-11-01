@@ -1,4 +1,4 @@
-import drawables from '/static/js/drawables.js'
+import { drawables } from '/static/js/drawables.js'
 
 /**
  * Make the function that draws the canvas application onto the given canvas
@@ -8,13 +8,13 @@ import drawables from '/static/js/drawables.js'
  * draw function to draw to.
  * @returns {() => void} The draw function.
  */
-export default function makeDraw(canvasContext) {
+export function makeDraw(canvasContext) {
   function draw() {
     canvasContext.clearRect(
       0,
       0,
       canvasContext.canvas.width,
-      canvasContext.canvas.height
+      canvasContext.canvas.height,
     )
 
     drawables.forEach(drawable => drawable.draw(canvasContext))
