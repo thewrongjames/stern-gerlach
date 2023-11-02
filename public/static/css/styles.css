@@ -1,4 +1,5 @@
 :root {
+  --grey-0: white;
   --grey-1: #F8F9FA;
   --grey-2: #E9ECEF;
   --grey-3: #DEE2E6;
@@ -10,18 +11,17 @@
   --grey-9: #212529;
 
   --background-colour: var(--grey-1);
-  --background-colour-header: var(--grey-8);
-  --background-colour-footer: var(--grey-8);
-  --background-colour-controls: var(--grey-6);
+  --background-colour-inverted: var(--grey-8);
+
+  --background-color-button: var(--grey-4);
+  --background-color-button-hovered: var(--grey-2);
+  --background-color-button-selected: var(--grey-1);
 
   --text-colour: var(--grey-9);
-  --header-text-colour: var(--grey-1);
-  --footer-text-colour: var(--grey-4);
+  --text-colour-inverted-highlight: var(--grey-1);
+  --text-colour-inverted-subtle: var(--grey-4);
 
   --bright-link-color: #72bce0;
-
-  --controls-button-background-color: var(--grey-2);
-  --controls-button-background-color-selected: var(--grey-1);
 
   --border-radius: 5px;
 }
@@ -46,8 +46,8 @@ body {
 
 header {
   min-height: 5rem;
-  background-color: var(--background-colour-header);
-  color: var(--header-text-colour);
+  background-color: var(--background-colour-inverted);
+  color: var(--text-colour-inverted-highlight);
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -60,8 +60,8 @@ header h1 {
 
 footer {
   min-height: 3rem;
-  background-color: var(--background-colour-footer);
-  color: var(--footer-text-colour);
+  background-color: var(--background-colour-inverted);
+  color: var(--text-colour-inverted-subtle);
   margin-top: auto;
   display: flex;
   text-align: center;
@@ -93,20 +93,36 @@ canvas {
   position: absolute;
   top: 2rem;
   left: 2rem;
-  background-color: var(--background-colour-controls);
+  background-color: var(--background-colour-inverted);
   padding: 1rem;
   border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  text-align: center;
+  color: var(--text-colour-inverted-subtle);
 }
 
-#controls button {
-  background-color: var(--controls-button-background-color);
+#controls button, #controls label {
+  font-size: 1rem;
+  background-color: var(--background-color-button);
   border: none;
   padding: 0.5rem;
   min-width: 5rem;
   border-radius: var(--border-radius);
+  color: var(--text-colour);
 }
 
-#controls button:hover {
+#controls button:hover, #controls label:hover {
   cursor: pointer;
-  background-color: var(--controls-button-background-color-selected);
+  background-color: var(--background-color-button-hovered);
+}
+
+#controls input[type="radio"]:checked + label {
+  background-color: var(--background-color-button-selected);
+}
+
+#controls input[type="radio"] {
+  display: none;
 }
