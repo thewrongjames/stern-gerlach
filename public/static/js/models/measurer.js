@@ -4,9 +4,14 @@ import { measurerCanvas } from '/static/js/canvases/measurer.js'
 
 /** @implements {Drawable} */
 export class Measurer {
-  constructor() {
-    this.x = Math.floor(Math.random() * 1000)
-    this.y = Math.floor(Math.random() * 500)
+  /**
+   * Create a Measurer at the given x and y coordinates.
+   * @param {number} x
+   * @param {number} y
+   */
+  constructor(x, y) {
+    this.x = x
+    this.y = y
   }
 
   /**

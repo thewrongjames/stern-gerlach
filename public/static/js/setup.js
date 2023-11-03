@@ -29,7 +29,10 @@ function setupNewButton() {
   }
 
   newButton.addEventListener('click', () => {
-    const smileyFace = new Measurer()
+    const smileyFace = new Measurer(
+      Math.floor(Math.random() * 1000),
+      Math.floor(Math.random() * 500),
+    )
     drawables.push(smileyFace)
   })
 }
@@ -50,9 +53,6 @@ function setup() {
   // Call once so the canvas is initially set to the correct size.
   windowResizeListener()
   window.addEventListener('resize', windowResizeListener)
-
-  const smileyFace = new Measurer()
-  drawables.push(smileyFace)
 
   setupNewButton()
 
