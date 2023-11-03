@@ -9,7 +9,8 @@
     },
     "allowJs": true,
     "checkJs": true,
-    "noEmit": true
+    "noEmit": true,
+    "target": "ES2015"
   },
   "include": [
     "public/static/js/**/*.js",

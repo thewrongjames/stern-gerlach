@@ -4,7 +4,7 @@ import { getCanvasContext } from '/static/js/lib/getCanvasContext.js'
 
 import { CANVAS_ELEMENT_ID, NEW_BUTTON_ID } from '/static/js/config.js'
 import { makeDraw } from '/static/js/draw.js'
-import { drawables } from '/static/js/drawables.js'
+import { state } from '/static/js/state.js'
 
 /**
  * Make a function designed to be attached to the window as a resize event
@@ -29,11 +29,11 @@ function setupNewButton() {
   }
 
   newButton.addEventListener('click', () => {
-    const smileyFace = new Measurer(
+    const measurer = new Measurer(
       Math.floor(Math.random() * 1000),
       Math.floor(Math.random() * 500),
     )
-    drawables.push(smileyFace)
+    state.addDrawable(measurer)
   })
 }
 

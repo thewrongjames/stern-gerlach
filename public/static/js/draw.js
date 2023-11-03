@@ -1,4 +1,4 @@
-import { drawables } from '/static/js/drawables.js'
+import { state } from '/static/js/state.js'
 
 /**
  * Make the function that draws the canvas application onto the given canvas
@@ -17,7 +17,7 @@ export function makeDraw(canvasContext) {
       canvasContext.canvas.height,
     )
 
-    drawables.forEach(drawable => drawable.draw(canvasContext))
+    state.drawables.forEach(drawable => drawable.draw(canvasContext))
 
     window.requestAnimationFrame(draw)
   }
