@@ -1,5 +1,7 @@
 # To Do
 
+- Ensure that the drawables take the right type of vectors.
+- Make the control box width better.
 - Canvas pan-able.
 - Canvas zoom-able.
 - Recentre the canvas.
