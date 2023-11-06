@@ -1,23 +1,22 @@
-import { state } from '/static/js/state.js'
+/** @typedef {import("/static/js/state").State} State */
 
 /**
- * Make the function that draws the canvas application onto the given canvas
- * rendering context. The draw function will set itself up to repeat using
- * requestAnimationFrame.
- * @param {CanvasRenderingContext2D} canvasContext The canvas context for the
- * draw function to draw to.
+ * Make the function that draws the canvas application onto the canvas rendering
+ * context on the given state. The draw function will set itself up to repeat
+ * using requestAnimationFrame.
+ * @param {State} state
  * @returns {() => void} The draw function.
  */
-export function makeDraw(canvasContext) {
+export function makeDraw(state) {
   function draw() {
-    canvasContext.clearRect(
+    state.canvasContext.clearRect(
       0,
       0,
-      canvasContext.canvas.width,
-      canvasContext.canvas.height,
+      state.canvasContext.canvas.width,
+      state.canvasContext.canvas.height,
     )
 
-    state.drawables.forEach(drawable => drawable.draw(canvasContext))
+    state.drawables.forEach(drawable => drawable.draw(state.canvasContext))
 
     window.requestAnimationFrame(draw)
   }

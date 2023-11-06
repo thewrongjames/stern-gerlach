@@ -10,10 +10,12 @@
     "allowJs": true,
     "checkJs": true,
     "noEmit": true,
-    "target": "ES2015"
+    "target": "ES2015",
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": true,
   },
   "include": [
     "public/static/js/**/*.js",
     "types/**/*.ts"
-  ]
+, "public/static/js/models/test-2.ts"  ]
 }

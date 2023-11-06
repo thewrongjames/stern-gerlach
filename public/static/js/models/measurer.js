@@ -5,7 +5,7 @@ import { measurerCanvas } from '/static/js/canvases/measurer.js'
 /** @implements {Drawable} */
 export class Measurer {
   /**
-   * Create a Measurer at the given x and y coordinates.
+   * Create a Measurer at the given position.
    * @param {number} x
    * @param {number} y
    */

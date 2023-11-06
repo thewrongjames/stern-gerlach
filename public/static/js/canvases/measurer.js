@@ -1,4 +1,4 @@
-import { getCanvasContext } from '/static/js/lib/getCanvasContext.js'
+import { getCanvasContext } from '/static/js/lib/get-canvas-context.js'
 
 const MEASURER_WIDTH = 100
 const MEASURER_HEIGHT = 50

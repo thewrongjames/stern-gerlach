@@ -1,10 +1,10 @@
 import { Measurer } from '/static/js/models/measurer.js'
 
-import { getCanvasContext } from '/static/js/lib/getCanvasContext.js'
+import { getCanvasContext } from '/static/js/lib/get-canvas-context.js'
 
 import { CANVAS_ELEMENT_ID, NEW_BUTTON_ID } from '/static/js/config.js'
 import { makeDraw } from '/static/js/draw.js'
-import { state } from '/static/js/state.js'
+import { State } from '/static/js/state.js'
 
 /**
  * Make a function designed to be attached to the window as a resize event
@@ -20,7 +20,8 @@ function makeWindowResizeListener(canvas) {
   }
 }
 
-function setupNewButton() {
+/** @param {State} state */
+function setupNewButton(state) {
   const newButton = document.getElementById(NEW_BUTTON_ID)
   if (newButton === null) {
     throw new Error(
@@ -48,16 +49,17 @@ function setup() {
   }
 
   const canvasContext = getCanvasContext(canvas)
+  const state = State.getInstance(canvasContext)
   
   const windowResizeListener = makeWindowResizeListener(canvas)
   // Call once so the canvas is initially set to the correct size.
   windowResizeListener()
   window.addEventListener('resize', windowResizeListener)
 
-  setupNewButton()
+  setupNewButton(state)
 
   // Start the drawing loop.
-  makeDraw(canvasContext)()
+  makeDraw(state)()
 }
 
 setup()
