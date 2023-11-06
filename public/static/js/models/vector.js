@@ -1,23 +1,46 @@
 /** @typedef {import('/static/js/state').State} State */
 
 /**
- * @typedef Vector
+ * @typedef VectorLike
  * @property {number} x
  * @property {number} y
  */
 
-/**
- * Return a new vector that is the sum of the two given vectors.
- * @param {Vector} firstVector 
- * @param {Vector} secondVector 
- * @returns {Vector}
- */
-function addVectors(firstVector, secondVector) {
-  return {x: firstVector.x + secondVector.x, y: firstVector.y + secondVector.y}
+/** @implements {VectorLike} */
+export class Vector {
+  /** @type {number} */
+  #x
+  /** @type {number} */
+  #y
+  
+  /**
+   * @param {number} x 
+   * @param {number} y 
+   */
+  constructor (x, y) {
+    this.#x = x
+    this.#y = y
+  }
+  
+  get x() {
+    return this.#x
+  }
+  get y() {
+    return this.#y
+  }
+
+  /**
+   * @param {Vector} other
+   * @returns {Vector}
+   */
+  plus(other) {
+    return new Vector(this.x + other.x, this.y + other.y)
+  }
 }
 
 /**
  * A vector in the coordinate space of pixels in the actually displayed canvas.
+ * @implements {VectorLike}
  */
 export class DisplayVector {
   /** @type {Vector} */
@@ -30,6 +53,12 @@ export class DisplayVector {
   
   get vector() {
     return this.#vector
+  }
+  get x() {
+    return this.#vector.x
+  }
+  get y() {
+    return this.#vector.y
   }
 
   /**
@@ -49,13 +78,14 @@ export class DisplayVector {
    * @returns {DisplayVector}
    */
   plus(other) {
-    return new DisplayVector(addVectors(this.vector, other.vector))
+    return new DisplayVector(this.vector.plus(other.vector))
   }
 }
 
 /**
  * A vector in the abstract coordinate space in which objects are placed. Maybe
  * be scaled and offset before it becomes a DisplayVector.
+ * @implements {VectorLike}
  */
 export class PositionVector {
   /** @type {Vector} */
@@ -68,6 +98,12 @@ export class PositionVector {
   
   get vector() {
     return this.#vector
+  }
+  get x() {
+    return this.#vector.x
+  }
+  get y() {
+    return this.#vector.y
   }
 
   /**
@@ -87,6 +123,6 @@ export class PositionVector {
    * @returns {PositionVector}
    */
   plus(other) {
-    return new PositionVector(addVectors(this.vector, other.vector))
+    return new PositionVector(this.vector.plus(other.vector))
   }
 }

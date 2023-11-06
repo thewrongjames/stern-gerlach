@@ -48,8 +48,8 @@ function setup() {
     )
   }
 
-  const canvasContext = getCanvasContext(canvas)
-  const state = State.getInstance(canvasContext)
+  const displayCanvasContext = getCanvasContext(canvas)
+  const state = State.getInstance(displayCanvasContext)
   
   const windowResizeListener = makeWindowResizeListener(canvas)
   // Call once so the canvas is initially set to the correct size.

@@ -1,7 +1,7 @@
 /** @typedef {import('@/types/drawable').Drawable} Drawable */
 
 import { MODE_RADIO_NAME } from '/static/js/config.js'
-import { DisplayVector } from '/static/js/models/vector.js'
+import { Vector, DisplayVector } from '/static/js/models/vector.js'
 
 /** @type {['pan', 'place', 'move']} */
 const modes = ['pan', 'place', 'move']
@@ -16,18 +16,21 @@ export class State {
   #drawables
 
   /** @type {CanvasRenderingContext2D} */
-  #canvasContext
+  #displayCanvasContext
   /** @type {Mode} */
   #mode
   /** @type {DisplayVector} */
   #mousePosition
+  /** @type {DisplayVector} */
+  #positionCanvasOffset
 
   /**
-   * Create an instance of the state singleton for the given canvasContext. This
-   * should not be constructed directly; get instance should be used instead.
-   * @param {CanvasRenderingContext2D} canvasContext 
+   * Create an instance of the state singleton. This should not be constructed
+   * directly; get instance should be used instead.
+   * @param {CanvasRenderingContext2D} displayCanvasContext The canvas rendering
+   * context of the actually displayed canvas.
    */
-  constructor(canvasContext) {
+  constructor(displayCanvasContext) {
     if (!State.#allowConstruction) {
       throw new Error(
         'State should not be constructed directly. Use State.getInstance.',
@@ -36,9 +39,10 @@ export class State {
 
     this.#drawables = []
 
-    this.#canvasContext = canvasContext
+    this.#displayCanvasContext = displayCanvasContext
     this.#mode = State.#getSelectedMode()
-    this.#mousePosition = new DisplayVector({x: 0, y: 0})
+    this.#mousePosition = new DisplayVector(new Vector(0, 0))
+    this.#positionCanvasOffset = new DisplayVector(new Vector(0, 0))
 
     // Listen for updates to the mode.
     document.querySelectorAll(
@@ -52,30 +56,30 @@ export class State {
 
     // Listen for updates to the mouse position.
     document.addEventListener('mousemove', event => {
-      const { left, top } = this.#canvasContext.canvas.getBoundingClientRect()
+      const { left, top } = this.#displayCanvasContext.canvas.getBoundingClientRect()
 
-      this.#mousePosition = new DisplayVector({
-        x: event.clientX - left,
-        y: event.clientY - top,
-      })
+      this.#mousePosition = new DisplayVector(new Vector(
+        event.clientX - left,
+        event.clientY - top,
+      ))
 
       console.log(this.#mousePosition.vector)
     })
   }
 
   /**
-   * Get the state singleton, creating it, using the given canvasContext if it
-   * does not yet exist.
-   * @param {CanvasRenderingContext2D} canvasContext 
+   * Get the state singleton, creating it if it does not yet exist.
+   * @param {CanvasRenderingContext2D} displayCanvasContext The canvas rendering
+   * context of the actually displayed canvas.
    * @returns {State}
    */
-  static getInstance(canvasContext) {
+  static getInstance(displayCanvasContext) {
     if (State.#instance !== null) {
       return State.#instance
     }
   
     State.#allowConstruction = true
-    State.#instance = new State(canvasContext)
+    State.#instance = new State(displayCanvasContext)
     State.#allowConstruction = false
     return State.#instance
   }
@@ -106,19 +110,17 @@ export class State {
     throw new Error(`Failed to get selected mode: got invalid mode "${mode}"`)
   }
 
-  /** @returns {Drawable[]} */
   get drawables() {
     return this.#drawables
   }
-
-  /** @returns {Mode} */
   get mode() {
     return this.#mode
   }
-
-  /** @returns {CanvasRenderingContext2D} */
-  get canvasContext() {
-    return this.#canvasContext
+  get displayCanvasContext() {
+    return this.#displayCanvasContext
+  }
+  get positionCanvasOffset() {
+    return this.#positionCanvasOffset
   }
 
   /** @param {Drawable} newDrawable */

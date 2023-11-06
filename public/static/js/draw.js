@@ -1,3 +1,11 @@
+import {
+  POSITION_CANVAS_WIDTH,
+  POSITION_CANVAS_HEIGHT,
+  DISPLAY_CANVAS_BACKGROUND_COLOUR,
+  POSITION_CANVAS_BACKGROUND_COLOUR,
+} from '/static/js/config.js'
+import { getCanvasContext } from '/static/js/lib/get-canvas-context.js'
+
 /** @typedef {import("/static/js/state").State} State */
 
 /**
@@ -9,14 +17,33 @@
  */
 export function makeDraw(state) {
   function draw() {
-    state.canvasContext.clearRect(
+    const positionCanvas = document.createElement('canvas')
+    positionCanvas.width = POSITION_CANVAS_WIDTH
+    positionCanvas.height = POSITION_CANVAS_HEIGHT
+    const positionCanvasContext = getCanvasContext(positionCanvas)
+
+    positionCanvasContext.fillStyle = POSITION_CANVAS_BACKGROUND_COLOUR
+    positionCanvasContext.fillRect(
       0,
       0,
-      state.canvasContext.canvas.width,
-      state.canvasContext.canvas.height,
+      positionCanvas.width,
+      positionCanvas.height,
+    )
+    state.drawables.forEach(drawable => drawable.draw(positionCanvasContext))
+
+    state.displayCanvasContext.fillStyle = DISPLAY_CANVAS_BACKGROUND_COLOUR
+    state.displayCanvasContext.fillRect(
+      0,
+      0,
+      state.displayCanvasContext.canvas.width,
+      state.displayCanvasContext.canvas.height,
     )
 
-    state.drawables.forEach(drawable => drawable.draw(state.canvasContext))
+    state.displayCanvasContext.drawImage(
+      positionCanvas,
+      state.positionCanvasOffset.x,
+      state.positionCanvasOffset.y,
+    )
 
     window.requestAnimationFrame(draw)
   }
