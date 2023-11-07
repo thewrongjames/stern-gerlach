@@ -9,6 +9,8 @@ const modes = ['pan', 'place', 'move']
  * Manages tracking and updating the state of the UI.
  */
 export class UIController {
+  /** @type {HTMLCanvasElement} */
+  #displayCanvas
   /** @type {Mode} */
   #mode
   /** @type {DisplayVector} */
@@ -16,8 +18,13 @@ export class UIController {
 
   /** @param {HTMLCanvasElement} displayCanvas */
   constructor(displayCanvas) {
-    this.#mode = UIController.#getSelectedMode()
+    this.#displayCanvas = displayCanvas
     this.#mousePosition = new DisplayVector(new Vector(0, 0))
+    
+    // Ensure the mode is statically set in the constructor, but also get the
+    // necessary side effects.
+    this.#mode = UIController.#getSelectedMode()
+    this.#setMode(this.#mode)
 
     const modeRadioButtons = document.querySelectorAll(
       `input[name = "${MODE_RADIO_NAME}"]`,
@@ -33,7 +40,7 @@ export class UIController {
     // Listen for updates to the mode.
     modeRadioButtons.forEach(element => {
       element.addEventListener('change', () => {
-        this.#mode = UIController.#getSelectedMode()
+        this.#setMode(UIController.#getSelectedMode())
         console.log(this.#mode)
       })
     })
@@ -75,6 +82,12 @@ export class UIController {
     }
   
     throw new Error(`Failed to get selected mode: got invalid mode "${mode}"`)
+  }
+
+  /** @param {Mode} newMode */
+  #setMode(newMode) {
+    this.#mode = newMode
+    this.#displayCanvas.dataset['mode'] = newMode
   }
 
   get mode() {

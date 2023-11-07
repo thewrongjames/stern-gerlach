@@ -89,6 +89,14 @@ canvas {
   width: 100%;
 }
 
+canvas[data-mode="pan"] {
+  cursor: grab
+}
+
+canvas[data-mode="pan"]:active {
+  cursor: grabbing
+}
+
 #controls {
   position: absolute;
   top: 2rem;
