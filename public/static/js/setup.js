@@ -2,9 +2,10 @@ import { Measurer } from '/static/js/models/measurer.js'
 
 import { getCanvasContext } from '/static/js/lib/get-canvas-context.js'
 
-import { CANVAS_ELEMENT_ID, NEW_BUTTON_ID } from '/static/js/config.js'
+import { DISPLAY_CANVAS_ELEMENT_ID, NEW_BUTTON_ID } from '/static/js/config.js'
 import { makeDraw } from '/static/js/draw.js'
-import { State } from '/static/js/state.js'
+import { CanvasController } from '/static/js/controllers/canvas-controller.js'
+import { UIController } from '/static/js/controllers/ui-controller.js'
 
 /**
  * Make a function designed to be attached to the window as a resize event
@@ -20,8 +21,8 @@ function makeWindowResizeListener(canvas) {
   }
 }
 
-/** @param {State} state */
-function setupNewButton(state) {
+/** @param {CanvasController} canvasController */
+function setupNewButton(canvasController) {
   const newButton = document.getElementById(NEW_BUTTON_ID)
   if (newButton === null) {
     throw new Error(
@@ -34,32 +35,34 @@ function setupNewButton(state) {
       Math.floor(Math.random() * 1000),
       Math.floor(Math.random() * 500),
     )
-    state.addDrawable(measurer)
+    canvasController.addDrawable(measurer)
   })
 }
 
 function setup() {
-  const canvas = document.getElementById(CANVAS_ELEMENT_ID)
+  const canvas = document.getElementById(DISPLAY_CANVAS_ELEMENT_ID)
   if (!(canvas instanceof HTMLCanvasElement)) {
     console.error(canvas)
     throw new Error(
-      `Expected the element with ID ${CANVAS_ELEMENT_ID} to be an ` +
+      `Expected the element with ID ${DISPLAY_CANVAS_ELEMENT_ID} to be an ` +
       `HTMLCanvasElement but got ${canvas}.`,
     )
   }
-
-  const displayCanvasContext = getCanvasContext(canvas)
-  const state = State.getInstance(displayCanvasContext)
   
   const windowResizeListener = makeWindowResizeListener(canvas)
   // Call once so the canvas is initially set to the correct size.
   windowResizeListener()
   window.addEventListener('resize', windowResizeListener)
 
-  setupNewButton(state)
+  const displayCanvasContext = getCanvasContext(canvas)
+
+  const canvasController = new CanvasController(displayCanvasContext)
+  new UIController(canvas)
+
+  setupNewButton(canvasController)
 
   // Start the drawing loop.
-  makeDraw(state)()
+  makeDraw(canvasController)()
 }
 
 setup()

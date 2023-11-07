@@ -1,4 +1,4 @@
-/** @typedef {import('/static/js/state').State} State */
+/** @typedef {import('/static/js/state').CanvasController} State */
 
 /**
  * @typedef VectorLike

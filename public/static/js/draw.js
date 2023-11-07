@@ -6,13 +6,13 @@ import {
 } from '/static/js/config.js'
 import { getCanvasContext } from '/static/js/lib/get-canvas-context.js'
 
-/** @typedef {import("/static/js/state").State} State */
+/** @typedef {import("/static/js/controllers/canvas-controller").CanvasController} CanvasController */
 
 /**
  * Make the function that draws the canvas application onto the canvas rendering
  * context on the given state. The draw function will set itself up to repeat
  * using requestAnimationFrame.
- * @param {State} state
+ * @param {CanvasController} state
  * @returns {() => void} The draw function.
  */
 export function makeDraw(state) {
