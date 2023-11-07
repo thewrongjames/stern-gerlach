@@ -3,7 +3,6 @@ import { Measurer } from '/static/js/models/measurer.js'
 import { getCanvasContext } from '/static/js/lib/get-canvas-context.js'
 
 import { DISPLAY_CANVAS_ELEMENT_ID, NEW_BUTTON_ID } from '/static/js/config.js'
-import { makeDraw } from '/static/js/draw.js'
 import { CanvasController } from '/static/js/controllers/canvas-controller.js'
 import { UIController } from '/static/js/controllers/ui-controller.js'
 
@@ -62,7 +61,7 @@ function setup() {
   setupNewButton(canvasController)
 
   // Start the drawing loop.
-  makeDraw(canvasController)()
+  canvasController.startDrawing()
 }
 
 setup()
