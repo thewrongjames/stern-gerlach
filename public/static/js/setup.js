@@ -39,24 +39,24 @@ function setupNewButton(canvasController) {
 }
 
 function setup() {
-  const canvas = document.getElementById(DISPLAY_CANVAS_ELEMENT_ID)
-  if (!(canvas instanceof HTMLCanvasElement)) {
-    console.error(canvas)
+  const displayCanvas = document.getElementById(DISPLAY_CANVAS_ELEMENT_ID)
+  if (!(displayCanvas instanceof HTMLCanvasElement)) {
+    console.error(displayCanvas)
     throw new Error(
       `Expected the element with ID ${DISPLAY_CANVAS_ELEMENT_ID} to be an ` +
-      `HTMLCanvasElement but got ${canvas}.`,
+      `HTMLCanvasElement but got ${displayCanvas}.`,
     )
   }
   
-  const windowResizeListener = makeWindowResizeListener(canvas)
+  const windowResizeListener = makeWindowResizeListener(displayCanvas)
   // Call once so the canvas is initially set to the correct size.
   windowResizeListener()
   window.addEventListener('resize', windowResizeListener)
 
-  const displayCanvasContext = getCanvasContext(canvas)
+  const displayCanvasContext = getCanvasContext(displayCanvas)
 
   const canvasController = new CanvasController(displayCanvasContext)
-  new UIController(canvas)
+  new UIController(displayCanvas)
 
   setupNewButton(canvasController)
 
