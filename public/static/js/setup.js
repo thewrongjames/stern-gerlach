@@ -1,10 +1,11 @@
-import { Measurer } from '/static/js/models/measurer.js'
+import { Measurer } from '/static/js/models/drawables/measurer/index.js'
 
 import { getCanvasContext } from '/static/js/lib/get-canvas-context.js'
 
 import { DISPLAY_CANVAS_ELEMENT_ID, NEW_BUTTON_ID } from '/static/js/config.js'
 import { CanvasController } from '/static/js/controllers/canvas-controller.js'
 import { UIController } from '/static/js/controllers/ui-controller.js'
+import { PositionVector, Vector } from '/static/js/models/vector.js'
 
 /**
  * Make a function designed to be attached to the window as a resize event
@@ -30,10 +31,10 @@ function setupNewButton(canvasController) {
   }
 
   newButton.addEventListener('click', () => {
-    const measurer = new Measurer(
+    const measurer = new Measurer(new PositionVector(new Vector(
       Math.floor(Math.random() * 1000),
       Math.floor(Math.random() * 500),
-    )
+    )))
     canvasController.addDrawable(measurer)
   })
 }
