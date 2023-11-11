@@ -19,6 +19,9 @@ export class UIController {
   /** @type {DisplayVector} */
   #mousePosition = new DisplayVector(new Vector(0, 0))
 
+  /** @type {(newMode: Mode) => void} */
+  onModeChange = () => {}
+
   /** @param {HTMLCanvasElement} displayCanvas */
   constructor(displayCanvas) {
     this.#displayCanvas = displayCanvas
@@ -43,19 +46,15 @@ export class UIController {
     modeRadioButtons.forEach(element => {
       element.addEventListener('change', () => {
         this.#setMode(UIController.#getSelectedMode())
-        console.log(this.#mode)
       })
     })
 
     // Listen for updates to the mouse position.
     document.addEventListener('mousemove', event => {
-      const { left, top } = this.#displayCanvas.getBoundingClientRect()
-
-      this.#mousePosition = new DisplayVector(new Vector(
-        event.clientX - left,
-        event.clientY - top,
-      ))
-
+      this.#mousePosition = DisplayVector.fromMouseEvent(
+        event,
+        this.#displayCanvas,
+      )
       console.log(this.#mousePosition.vector)
     })
   }
@@ -90,12 +89,10 @@ export class UIController {
   #setMode(newMode) {
     this.#mode = newMode
     this.#displayCanvas.dataset['mode'] = newMode
+    this.onModeChange(newMode)
   }
 
   get mode() {
     return this.#mode
-  }
-  get mousePosition() {
-    return this.#mousePosition
   }
 }

@@ -1,5 +1,3 @@
-/** @typedef {import('/static/js/state').CanvasController} State */
-
 /**
  * @typedef VectorLike
  * @property {number} x
@@ -50,6 +48,21 @@ export class DisplayVector {
   constructor(vector) {
     this.#vector = vector
   }
+
+
+  /**
+   * @param {MouseEvent} event
+   * @param {HTMLCanvasElement} displayCanvas
+   * @returns {DisplayVector}
+   */
+  static fromMouseEvent(event, displayCanvas) {
+    const {left, top} = displayCanvas.getBoundingClientRect()
+
+    return new DisplayVector(new Vector(
+      event.clientX - left,
+      event.clientY - top,
+    ))
+  }
   
   get vector() {
     return this.#vector
@@ -65,11 +78,9 @@ export class DisplayVector {
    * Get this DisplayVector as its corresponding PositionVector, given a
    * particular global state. Note that once this global state changes, this
    * mapping may no long be accurate.
-   * @param {State} state 
    */
-  toPositionVector(state) {
+  toPositionVector() {
     // TODO: This.
-    console.log(state)
     throw new Error('Not implemented.')
   }
 
@@ -110,11 +121,9 @@ export class PositionVector {
    * Get this PositionVector as its corresponding DisplayVector, given a
    * particular global state. Note that once this global state changes, this
    * mapping may no long be accurate.
-   * @param {State} state 
    */
-  toDisplayVector(state) {
+  toDisplayVector() {
     // TODO: This.
-    console.log(state)
     throw new Error('Not implemented')
   }
 

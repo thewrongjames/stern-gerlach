@@ -15,9 +15,7 @@ function setup() {
   const displayCanvasContext = getCanvasContext(displayCanvas)
 
   const appController = new AppController(displayCanvasContext)
-  console.log(1)
   appController.start()
-  console.log(Infinity)
 }
 
 setup()
