@@ -17,5 +17,5 @@
   "include": [
     "public/static/js/**/*.js",
     "types/**/*.ts"
-, "public/static/js/models/test-2.ts"  ]
+  ]
 }

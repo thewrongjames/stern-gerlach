@@ -1,5 +1,3 @@
-/** @typedef {import('@/types/drawable').Drawable} Drawable */
-
 import {
   POSITION_CANVAS_WIDTH,
   POSITION_CANVAS_HEIGHT,
@@ -10,29 +8,69 @@ import {
 import { getCanvasContext } from '/static/js/lib/get-canvas-context.js'
 import { Vector, DisplayVector } from '/static/js/models/vector.js'
 
+/** @typedef {import('@/types/drawable').Drawable} Drawable */
+/** @typedef {import('@/types/controller').Controller} Controller */
+
+/**
+ * Manages tracking and updating the state of the display canvas.
+ * @implements {Controller}
+ */
 export class CanvasController {
   /** @type {CanvasRenderingContext2D} */
   #displayCanvasContext
 
-  /** @type {Drawable[]} */
-  #drawables
-  /** @type {DisplayVector} */
-  #positionCanvasOffset
+  /** @type {Record<number, Drawable>} */
+  #drawables = []
+  #nextDrawableKey = 0
+  #positionCanvasOffset = new DisplayVector(new Vector(0, 0))
 
   /** @param {CanvasRenderingContext2D} displayCanvasContext */
   constructor(displayCanvasContext) {
     this.#displayCanvasContext = displayCanvasContext
-    
-    this.#drawables = []
-    this.#positionCanvasOffset = new DisplayVector(new Vector(0, 0))
+  }
+  
+  start() {
+    // Resize the canvas once so it starts at the right size.
+    this.#resizeCanvas()
+    // Keep the canvas size up-to-date.
+    window.addEventListener('resize', () => this.#resizeCanvas())
+
+    // Start the draw-loop.
+    this.#startDrawing()
   }
 
-  /** @param {Drawable} newDrawable */
+  get displayCanvasContext() {
+    return this.#displayCanvasContext
+  }
+
+  /**
+   * Add the given drawable to the set of drawables, and return a key
+   * identifying
+   * @param {Drawable} newDrawable
+   * @returns {number}
+   */
   addDrawable(newDrawable) {
-    this.#drawables.push(newDrawable)
+    const key = this.#nextDrawableKey++
+    this.#drawables[key] = newDrawable
+    return key
   }
 
-  startDrawing() {
+  /** @param {number} key */
+  removeDrawable(key) {
+    delete this.#drawables[key]
+  }
+
+  /**
+   * Update the size (in pixels) of the canvas image to be the same as the size
+   * (in pixels) of the canvas element on the screen.
+   */
+  #resizeCanvas() {
+    const canvas = this.#displayCanvasContext.canvas
+    canvas.width = canvas.clientWidth
+    canvas.height = canvas.clientHeight
+  }
+
+  #startDrawing() {
     // An arrow function so it doesn't re-bind "this" to be itself.
     const draw = () => {
       const positionCanvas = document.createElement('canvas')
@@ -47,7 +85,8 @@ export class CanvasController {
         positionCanvas.width,
         positionCanvas.height,
       )
-      this.#drawables.forEach(drawable => drawable.draw(positionCanvasContext))
+      Object.values(this.#drawables)
+        .forEach(drawable => drawable.draw(positionCanvasContext))
   
       this.#displayCanvasContext.fillStyle = DISPLAY_CANVAS_BACKGROUND_COLOUR
       this.#displayCanvasContext.fillRect(

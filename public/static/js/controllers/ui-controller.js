@@ -1,28 +1,30 @@
 import { MODE_RADIO_NAME } from '/static/js/config.js'
 import { Vector, DisplayVector } from '/static/js/models/vector.js'
 
+/** @typedef {import('@/types/controller').Controller} Controller */
+
 /** @type {['pan', 'place', 'move']} */
 const modes = ['pan', 'place', 'move']
 /** @typedef {(typeof modes)[number]} Mode */
 
 /**
  * Manages tracking and updating the state of the UI.
+ * @implements {Controller}
  */
 export class UIController {
   /** @type {HTMLCanvasElement} */
   #displayCanvas
   /** @type {Mode} */
-  #mode
+  #mode = 'pan'
   /** @type {DisplayVector} */
-  #mousePosition
+  #mousePosition = new DisplayVector(new Vector(0, 0))
 
   /** @param {HTMLCanvasElement} displayCanvas */
   constructor(displayCanvas) {
     this.#displayCanvas = displayCanvas
-    this.#mousePosition = new DisplayVector(new Vector(0, 0))
-    
-    // Ensure the mode is statically set in the constructor, but also get the
-    // necessary side effects.
+  }
+
+  start() {
     this.#mode = UIController.#getSelectedMode()
     this.#setMode(this.#mode)
 
@@ -47,7 +49,7 @@ export class UIController {
 
     // Listen for updates to the mouse position.
     document.addEventListener('mousemove', event => {
-      const { left, top } = displayCanvas.getBoundingClientRect()
+      const { left, top } = this.#displayCanvas.getBoundingClientRect()
 
       this.#mousePosition = new DisplayVector(new Vector(
         event.clientX - left,
