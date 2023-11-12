@@ -1,10 +1,6 @@
 # To Do
 
-- App controller
 - Place boxes in particular locations.
-- State with transitions triggered by events.
-- Some kind of FSM for tracking sub-modes?
-- Canvas pan-able.
 - Canvas zoom-able.
 - Recentre the canvas.
 - Make the control box width better.
@@ -19,3 +15,6 @@
 
 - Enforce storing a position (top left) and vector to bottom right of bounding box on a drawable.
 - If I don't have other types, remove the types directory and move drawble to a comment in models/drawables/index.js.
+- A mouse-up off the canvas maybe shouldn't complete the action.\
+- Infinite tiling position canvas, intelligently deciding which should have anything
+  drawn to them (and handling things that overlap two)...

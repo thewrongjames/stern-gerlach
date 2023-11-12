@@ -1,5 +1,4 @@
 import { MODE_RADIO_NAME } from '/static/js/config.js'
-import { Vector, DisplayVector } from '/static/js/models/vector.js'
 
 /** @typedef {import('@/types/controller').Controller} Controller */
 
@@ -16,8 +15,6 @@ export class UIController {
   #displayCanvas
   /** @type {Mode} */
   #mode = 'pan'
-  /** @type {DisplayVector} */
-  #mousePosition = new DisplayVector(new Vector(0, 0))
 
   /** @type {(newMode: Mode) => void} */
   onModeChange = () => {}
@@ -47,15 +44,6 @@ export class UIController {
       element.addEventListener('change', () => {
         this.#setMode(UIController.#getSelectedMode())
       })
-    })
-
-    // Listen for updates to the mouse position.
-    document.addEventListener('mousemove', event => {
-      this.#mousePosition = DisplayVector.fromMouseEvent(
-        event,
-        this.#displayCanvas,
-      )
-      console.log(this.#mousePosition.vector)
     })
   }
 

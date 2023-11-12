@@ -1,10 +1,3 @@
-/**
- * @typedef VectorLike
- * @property {number} x
- * @property {number} y
- */
-
-/** @implements {VectorLike} */
 export class Vector {
   /** @type {number} */
   #x
@@ -34,11 +27,18 @@ export class Vector {
   plus(other) {
     return new Vector(this.x + other.x, this.y + other.y)
   }
+
+  /**
+   * @param {Vector} other
+   * @returns {Vector}
+   */
+  minus(other) {
+    return new Vector(this.x - other.x, this.y - other.y)
+  }
 }
 
 /**
  * A vector in the coordinate space of pixels in the actually displayed canvas.
- * @implements {VectorLike}
  */
 export class DisplayVector {
   /** @type {Vector} */
@@ -91,12 +91,19 @@ export class DisplayVector {
   plus(other) {
     return new DisplayVector(this.vector.plus(other.vector))
   }
+
+  /**
+   * @param {DisplayVector} other
+   * @returns {DisplayVector}
+   */
+  minus(other) {
+    return new DisplayVector(this.vector.minus(other.vector))
+  }
 }
 
 /**
  * A vector in the abstract coordinate space in which objects are placed. Maybe
  * be scaled and offset before it becomes a DisplayVector.
- * @implements {VectorLike}
  */
 export class PositionVector {
   /** @type {Vector} */
@@ -133,5 +140,13 @@ export class PositionVector {
    */
   plus(other) {
     return new PositionVector(this.vector.plus(other.vector))
+  }
+
+  /**
+   * @param {PositionVector} other
+   * @returns {PositionVector}
+   */
+  minus(other) {
+    return new PositionVector(this.vector.minus(other.vector))
   }
 }

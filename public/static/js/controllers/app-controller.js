@@ -13,10 +13,10 @@ import { DisplayVector, PositionVector, Vector } from '/static/js/models/vector.
 /**
  * @typedef {(
  *  {name: 'pan-selecting'} |
- *  {name: 'pan-panning', start: DisplayVector} |
+ *  {name: 'pan-acting', grabStart: DisplayVector, offsetStart: DisplayVector} |
  *  {name: 'place'} |
  *  {name: 'move-selecting'} |
- *  {name: 'move-moving', drawable: Drawable, holdingOffset: PositionVector}
+ *  {name: 'move-acting', drawable: Drawable, holdingOffset: PositionVector}
  * )} State
  */
 
@@ -24,7 +24,8 @@ import { DisplayVector, PositionVector, Vector } from '/static/js/models/vector.
  * @typedef {(
  *  {name: 'mode-change', newMode: Mode} |
  *  {name: 'mouse-down', location: DisplayVector} |
- *  {name: 'mouse-up', location: DisplayVector}
+ *  {name: 'mouse-up', location: DisplayVector} |
+ *  {name: 'mouse-move', location: DisplayVector}
  * )} Action
  */
 
@@ -47,6 +48,7 @@ export class AppController {
   #uiController
   /** @type {State} */
   #state
+  #mousePosition = new DisplayVector(new Vector(0, 0))
 
   /** @param {CanvasRenderingContext2D} displayCanvasContext  */
   constructor(displayCanvasContext) {
@@ -84,10 +86,15 @@ export class AppController {
       name: 'mouse-down',
       location: DisplayVector.fromMouseEvent(event, canvas),
     })})
-    canvas.addEventListener('mouseup', event => {this.handleAction({
+    // A mouse up anywhere will end an action.
+    document.addEventListener('mouseup', event => {this.handleAction({
       name: 'mouse-up',
       location: DisplayVector.fromMouseEvent(event, canvas),
     })})
+    document.addEventListener('mousemove', event => {this.handleAction({
+      name: 'mouse-move',
+      location: DisplayVector.fromMouseEvent(event, canvas),
+    })})    
 
     this.#canvasController.start()
     this.#uiController.start()
@@ -95,6 +102,36 @@ export class AppController {
 
   /** @param {Action} action */
   handleAction(action) {
-    console.log(action)
+    if (action.name !== 'mouse-move') {
+      console.log({action})
+      console.log({state: this.#state})
+    }
+
+    if (action.name === 'mode-change') {
+      this.#state = AppController.#defaultStateForMode[action.newMode]
+    } else if (action.name === 'mouse-move') {
+      this.#mousePosition = action.location
+
+      if (this.#state.name === 'pan-acting') {
+        console.log('here')
+        // This implements panning. I hope. Just... just draw it out I guess.
+        this.#canvasController.positionCanvasOffset = action.location.minus(
+          this.#state.grabStart.minus(this.#state.offsetStart),
+        )
+      }
+    } else if (this.#state.name === 'pan-selecting' && action.name === 'mouse-down') {
+      this.#state = {
+        name: 'pan-acting',
+        grabStart: action.location,
+        // We store the offset from the start of the pan to minimise rounding.
+        offsetStart: this.#canvasController.positionCanvasOffset,
+      }
+    } else if (this.#state.name === 'pan-acting' && action.name === 'mouse-up') {
+      this.#state = {name: 'pan-selecting'}
+    }
+    
+    if (action.name !== 'mouse-move') {
+      console.log({state: this.#state})
+    }
   }
 }

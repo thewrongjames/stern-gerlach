@@ -22,11 +22,22 @@ export class CanvasController {
   /** @type {Record<number, Drawable>} */
   #drawables = []
   #nextDrawableKey = 0
-  #positionCanvasOffset = new DisplayVector(new Vector(0, 0))
+  
+  /** @type {DisplayVector} */
+  positionCanvasOffset
 
   /** @param {CanvasRenderingContext2D} displayCanvasContext */
   constructor(displayCanvasContext) {
     this.#displayCanvasContext = displayCanvasContext
+
+    // Centre the position canvas within the display canvas.
+    const canvas = displayCanvasContext.canvas
+    const widthOverflow = POSITION_CANVAS_WIDTH - canvas.clientWidth
+    const heightOverflow = POSITION_CANVAS_HEIGHT - canvas.clientHeight
+    this.positionCanvasOffset = new DisplayVector(new Vector(
+      -widthOverflow / 2,
+      -heightOverflow / 2,
+    ))
   }
   
   start() {
@@ -98,8 +109,8 @@ export class CanvasController {
   
       this.#displayCanvasContext.drawImage(
         positionCanvas,
-        this.#positionCanvasOffset.x,
-        this.#positionCanvasOffset.y,
+        this.positionCanvasOffset.x,
+        this.positionCanvasOffset.y,
       )
   
       window.requestAnimationFrame(draw)
