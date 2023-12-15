@@ -48,7 +48,6 @@ export class AppController {
   #uiController
   /** @type {State} */
   #state
-  #mousePosition = new DisplayVector(new Vector(0, 0))
 
   /** @param {CanvasRenderingContext2D} displayCanvasContext  */
   constructor(displayCanvasContext) {
@@ -102,36 +101,46 @@ export class AppController {
 
   /** @param {Action} action */
   handleAction(action) {
-    if (action.name !== 'mouse-move') {
-      console.log({action})
-      console.log({state: this.#state})
-    }
-
     if (action.name === 'mode-change') {
-      this.#state = AppController.#defaultStateForMode[action.newMode]
-    } else if (action.name === 'mouse-move') {
-      this.#mousePosition = action.location
-
-      if (this.#state.name === 'pan-acting') {
-        console.log('here')
-        // This implements panning. I hope. Just... just draw it out I guess.
-        this.#canvasController.positionCanvasOffset = action.location.minus(
-          this.#state.grabStart.minus(this.#state.offsetStart),
-        )
-      }
+      this.handleModeChange(action.newMode)
+    } else if (this.#state.name === 'pan-acting' && action.name === 'mouse-move') {
+      this.handlePanning(action.location, this.#state.grabStart, this.#state.offsetStart)
     } else if (this.#state.name === 'pan-selecting' && action.name === 'mouse-down') {
-      this.#state = {
-        name: 'pan-acting',
-        grabStart: action.location,
-        // We store the offset from the start of the pan to minimise rounding.
-        offsetStart: this.#canvasController.positionCanvasOffset,
-      }
+      this.handleStartPanning(action.location)
     } else if (this.#state.name === 'pan-acting' && action.name === 'mouse-up') {
-      this.#state = {name: 'pan-selecting'}
+      this.handleStopPanning()
     }
-    
-    if (action.name !== 'mouse-move') {
-      console.log({state: this.#state})
+  }
+
+  /** @param {Mode} newMode */
+  handleModeChange(newMode) {
+    this.#state = AppController.#defaultStateForMode[newMode]
+  }
+
+  /**
+   * @param {DisplayVector} mouseLocation
+   * @param {DisplayVector} grabStart
+   * @param {DisplayVector} offsetStart
+   */
+  handlePanning(mouseLocation, grabStart, offsetStart) {
+    // This implements panning. I hope. Just... just draw it out I guess.
+    // p = m - (g - o).
+    this.#canvasController.positionCanvasOffset = mouseLocation.minus(
+      grabStart.minus(offsetStart),
+    )
+  }
+
+  /** @param {DisplayVector} mouseLocation */
+  handleStartPanning(mouseLocation) {
+    this.#state = {
+      name: 'pan-acting',
+      grabStart: mouseLocation,
+      // We store the offset from the start of the pan to minimise rounding.
+      offsetStart: this.#canvasController.positionCanvasOffset,
     }
+  }
+
+  handleStopPanning() {
+    this.#state = {name: 'pan-selecting'}
   }
 }
