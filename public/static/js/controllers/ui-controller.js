@@ -16,7 +16,11 @@ export class UIController {
   /** @type {Mode} */
   #mode = 'pan'
 
-  /** @type {(newMode: Mode) => void} */
+  /**
+   * A callback triggered whenever the "mode" changes. It is also called with
+   * the current mode value when the start method is run.
+   * @type {(newMode: Mode) => void}
+   */
   onModeChange = () => {}
 
   /** @param {HTMLCanvasElement} displayCanvas */
@@ -25,8 +29,7 @@ export class UIController {
   }
 
   start() {
-    this.#mode = UIController.#getSelectedMode()
-    this.#setMode(this.#mode)
+    this.#setMode(UIController.#getSelectedMode())
 
     const modeRadioButtons = document.querySelectorAll(
       `input[name = "${MODE_RADIO_NAME}"]`,

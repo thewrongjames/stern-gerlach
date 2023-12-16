@@ -14,7 +14,7 @@ import { DisplayVector, PositionVector, Vector } from '/static/js/models/vector.
  * @typedef {(
  *  {name: 'pan-selecting'} |
  *  {name: 'pan-acting', grabStart: DisplayVector, offsetStart: DisplayVector} |
- *  {name: 'place'} |
+ *  {name: 'place', temporaryDrawable: Drawable, temporaryDrawableKey: number} |
  *  {name: 'move-selecting'} |
  *  {name: 'move-acting', drawable: Drawable, holdingOffset: PositionVector}
  * )} State
@@ -23,9 +23,9 @@ import { DisplayVector, PositionVector, Vector } from '/static/js/models/vector.
 /**
  * @typedef {(
  *  {name: 'mode-change', newMode: Mode} |
- *  {name: 'mouse-down', location: DisplayVector} |
- *  {name: 'mouse-up', location: DisplayVector} |
- *  {name: 'mouse-move', location: DisplayVector}
+ *  {name: 'mouse-down', mouseLocation: DisplayVector} |
+ *  {name: 'mouse-up', mouseLocation: DisplayVector} |
+ *  {name: 'mouse-move', mouseLocation: DisplayVector}
  * )} Action
  */
 
@@ -35,26 +35,19 @@ import { DisplayVector, PositionVector, Vector } from '/static/js/models/vector.
  * @implements {Controller}
  */
 export class AppController {
-  /** @type {Record<Mode,State>} */
-  static #defaultStateForMode = {
-    'pan': {name: 'pan-selecting'},
-    'place': {name: 'place'},
-    'move': {name: 'move-selecting'},
-  }
-
   /** @type {CanvasController} */
   #canvasController
   /** @type {UIController} */
   #uiController
   /** @type {State} */
-  #state
+  #state = {name: 'pan-selecting'}
+  /** @type {DisplayVector} */
+  #mouseLocation = new DisplayVector(new Vector(0, 0))
 
   /** @param {CanvasRenderingContext2D} displayCanvasContext  */
   constructor(displayCanvasContext) {
     this.#canvasController = new CanvasController(displayCanvasContext)
     this.#uiController = new UIController(displayCanvasContext.canvas)
-
-    this.#state = AppController.#defaultStateForMode[this.#uiController.mode]
   }
   
   start() {
@@ -83,16 +76,15 @@ export class AppController {
     const canvas = this.#canvasController.displayCanvasContext.canvas
     canvas.addEventListener('mousedown', event => {this.handleAction({
       name: 'mouse-down',
-      location: DisplayVector.fromMouseEvent(event, canvas),
+      mouseLocation: DisplayVector.fromMouseEvent(event, canvas),
     })})
-    // A mouse up anywhere will end an action.
     document.addEventListener('mouseup', event => {this.handleAction({
       name: 'mouse-up',
-      location: DisplayVector.fromMouseEvent(event, canvas),
+      mouseLocation: DisplayVector.fromMouseEvent(event, canvas),
     })})
     document.addEventListener('mousemove', event => {this.handleAction({
       name: 'mouse-move',
-      location: DisplayVector.fromMouseEvent(event, canvas),
+      mouseLocation: DisplayVector.fromMouseEvent(event, canvas),
     })})    
 
     this.#canvasController.start()
@@ -101,12 +93,16 @@ export class AppController {
 
   /** @param {Action} action */
   handleAction(action) {
+    if ('mouseLocation' in action) {
+      this.#mouseLocation = action.mouseLocation
+    }
+
     if (action.name === 'mode-change') {
       this.handleModeChange(action.newMode)
     } else if (this.#state.name === 'pan-acting' && action.name === 'mouse-move') {
-      this.handlePanning(action.location, this.#state.grabStart, this.#state.offsetStart)
+      this.handlePanning(action.mouseLocation, this.#state.grabStart, this.#state.offsetStart)
     } else if (this.#state.name === 'pan-selecting' && action.name === 'mouse-down') {
-      this.handleStartPanning(action.location)
+      this.handleStartPanning(action.mouseLocation)
     } else if (this.#state.name === 'pan-acting' && action.name === 'mouse-up') {
       this.handleStopPanning()
     }
@@ -114,7 +110,36 @@ export class AppController {
 
   /** @param {Mode} newMode */
   handleModeChange(newMode) {
-    this.#state = AppController.#defaultStateForMode[newMode]
+    // Handle leaving the current mode.
+    if (this.#state.name === 'place') {
+      this.#canvasController.removeDrawable(this.#state.temporaryDrawableKey)
+    }
+
+    switch (newMode) {
+    case 'pan':
+      this.#state = {name: 'pan-selecting'}
+      break
+
+    case 'place': {
+      // TODO: Place this at the mouse.
+      const temporaryDrawable = new Measurer(new PositionVector(new Vector(0, 0)))
+      const temporaryDrawableKey = this.#canvasController.addDrawable(temporaryDrawable)
+      this.#state = {name: 'place', temporaryDrawable, temporaryDrawableKey}
+
+      break
+    }
+
+    case 'move':
+      this.#state = {name: 'move-selecting'}
+      break
+
+    default: {
+      /** @type {never} Ensure all cases are covered. */
+      // eslint-disable-next-line no-unused-vars
+      const _ = newMode
+      break
+    }
+    }
   }
 
   /**
